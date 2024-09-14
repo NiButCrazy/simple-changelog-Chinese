@@ -158,7 +158,7 @@
 		"viewsWelcome": [
 			{
 				"view": "changelog-explorer",
-				"contents": "未找到日志文件.\n[创建一个更新日志](command:simpleChangelog.initialize)",
+				"contents": "未找到日志文件\n[创建一个更新日志](command:simpleChangelog.initialize)",
 				"when": "!simpleChangelog.initialized"
 			}
 		],
@@ -217,7 +217,7 @@
 			{
 				"command": "simpleChangelog.changelogs.openChangelogFile",
 				"category": "Simple Changelog",
-				"title": "显示该项",
+				"title": "打开该更新日志",
 				"shortTitle": "打开文件",
 				"icon": "$(eye)"
 			},

@@ -56,7 +56,7 @@ class Changelog {
     toString() {
         const attributionPosition = (0, config_1.getConfig)('attribution.placement') ?? 'top';
         const attribution = this.getAttribution();
-        let x = '# Changelog\n\n';
+        let x = '# 更新日志\n\n';
         if (attributionPosition === 'top' && attribution) {
             x += `${attribution}\n\n`;
         }
@@ -125,7 +125,7 @@ class Changelog {
     }
     getAttribution() {
         const type = (0, config_1.getConfig)('attribution.visibility') ?? 'visible';
-        const text = `更新日志使用 [Simple Changelog 汉化版](https://marketplace.visualstudio.com/items?itemName=tobiaswaelde.vscode-simple-changelog) 生成`;
+        const text = `日志使用 [Simple Changelog 汉化版](https://github.com/NiButCrazy/simple-changelog-Chinese) 生成`;
         switch (type) {
             case 'visible':
                 return `*${text}*`;
