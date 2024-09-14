@@ -1,0 +1,332 @@
+{
+	"name": "vscode-simple-changelog-chinese",
+	"publisher": "NiButCrazy",
+	"displayName": "Simple Changelog 汉化版(自用测试)",
+	"description": "汉化以及优化界面",
+	"version": "1.2.1",
+	"license": "MIT",
+	"pricing": "Free",
+	"icon": "assets/icon/icon-x512.png",
+	"galleryBanner": {
+		"color": "#ffffff",
+		"theme": "light"
+	},
+	"repository": {
+		"url": "https://github.com/tobiaswaelde/vscode-simple-changelog"
+	},
+	"engines": {
+		"vscode": "^1.74.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"keywords": [
+		"vscode",
+		"vscode-extension",
+		"changelog",
+		"tool"
+	],
+	"activationEvents": [
+		"onView:changelog-explorer"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"configuration": {
+			"title": "Simple Changelog 配置",
+			"properties": {
+				"simpleChangelog.icons.color.enabled": {
+					"type": "boolean",
+					"default": "true",
+					"description": "Enable/disable color on icons in changelog."
+				},
+				"simpleChangelog.icons.addition.icon": {
+					"type": "string",
+					"default": "add",
+					"markdownDescription": "The icon for the `Additions` section."
+				},
+				"simpleChangelog.icons.addition.color": {
+					"type": "string",
+					"default": "charts.blue",
+					"markdownDescription": "The color of the `Additions` icon."
+				},
+				"simpleChangelog.icons.change.icon": {
+					"type": "string",
+					"default": "edit",
+					"markdownDescription": "The icon for the `Changes` section."
+				},
+				"simpleChangelog.icons.change.color": {
+					"type": "string",
+					"default": "charts.yellow",
+					"markdownDescription": "The color of the `Changes` icon."
+				},
+				"simpleChangelog.icons.deprecation.icon": {
+					"type": "string",
+					"default": "thumbsdown",
+					"markdownDescription": "The icon for the `Deprecations` section."
+				},
+				"simpleChangelog.icons.deprecation.color": {
+					"type": "string",
+					"default": "charts.purple",
+					"markdownDescription": "The color of the `Deprecations` icon."
+				},
+				"simpleChangelog.icons.fix.icon": {
+					"type": "string",
+					"default": "debug",
+					"markdownDescription": "The icon for the `Fixes` section."
+				},
+				"simpleChangelog.icons.fix.color": {
+					"type": "string",
+					"default": "charts.green",
+					"markdownDescription": "The color of the `Fixes` icon."
+				},
+				"simpleChangelog.icons.removal.icon": {
+					"type": "string",
+					"default": "circle-slash",
+					"markdownDescription": "The icon for the `Removals` section."
+				},
+				"simpleChangelog.icons.removal.color": {
+					"type": "string",
+					"default": "charts.red",
+					"markdownDescription": "The color of the `Removals` icon."
+				},
+				"simpleChangelog.icons.securityChange.icon": {
+					"type": "string",
+					"default": "book",
+					"markdownDescription": "The icon for the `Security Changes` section."
+				},
+				"simpleChangelog.icons.securityChange.color": {
+					"type": "string",
+					"default": "charts.orange",
+					"markdownDescription": "The color of the `Security Changes` icon."
+				},
+				"simpleChangelog.icons.item.icon": {
+					"type": "string",
+					"default": "circle-filled",
+					"description": "The icon for the changelog items."
+				},
+				"simpleChangelog.icons.item.enabled": {
+					"type": "boolean",
+					"default": false,
+					"description": "Enable/disable type icons on items."
+				},
+				"simpleChangelog.groupsOpenByDefault": {
+					"type": "boolean",
+					"default": true,
+					"markdownDescription": "If set to `true`, groups are open by default when opening version."
+				},
+				"simpleChangelog.searchIncludeRegex": {
+					"type": "string",
+					"default": "/changelog.md/i",
+					"description": "The regex used to search workspace folders for changelog files."
+				},
+				"simpleChangelog.searchExcludeRegex": {
+					"type": "string",
+					"default": "/node_modules/",
+					"description": "The regex used exlude folders in search for changelog files."
+				},
+				"simpleChangelog.dateFormat": {
+					"type": "string",
+					"default": "YYYY-MM-DD",
+					"markdownDescription": "The date format. See [Moment.js Documentation](https://momentjs.com/docs/#/displaying/format/) for more information."
+				},
+				"simpleChangelog.itemGrouping": {
+					"type": "boolean",
+					"default": true,
+					"description": "Enable/Disable item grouping under changelog version."
+				},
+				"simpleChangelog.attribution.visibility": {
+					"type": "string",
+					"default": "visible",
+					"enum": [
+						"visible",
+						"hidden",
+						"none"
+					],
+					"description": "Choose how the attribution to the extension should be displayed."
+				},
+				"simpleChangelog.attribution.placement": {
+					"type": "string",
+					"default": "top",
+					"enum": [
+						"top",
+						"bottom"
+					],
+					"description": "Choose where the attribution to the extension should be displayed."
+				}
+			}
+		},
+		"viewsWelcome": [
+			{
+				"view": "changelog-explorer",
+				"contents": "未找到日志文件.\n[创建一个更新日志](command:simpleChangelog.initialize)",
+				"when": "!simpleChangelog.initialized"
+			}
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "changelog-explorer",
+					"title": "更新日志",
+					"icon": "$(timeline-view-icon)"
+				}
+			]
+		},
+		"views": {
+			"changelog-explorer": [
+				{
+					"id": "changelog-explorer",
+					"name": "更新日志",
+					"icon": "$(timeline-view-icon)"
+				}
+			]
+		},
+		"commands": [
+			{
+				"command": "simpleChangelog.initialize",
+				"category": "Simple Changelog",
+				"title": "创建一个更新日志"
+			},
+			{
+				"command": "simpleChangelog.changelogs.refresh",
+				"category": "Simple Changelog",
+				"title": "刷新日志",
+				"shortTitle": "刷新",
+				"icon": "$(refresh)"
+			},
+			{
+				"command": "simpleChangelog.changelogs.addVersion",
+				"category": "Simple Changelog",
+				"title": "添加一个版本",
+				"shortTitle": "添加版本",
+				"icon": "$(add)"
+			},
+			{
+				"command": "simpleChangelog.changelogs.deleteVersion",
+				"category": "Simple Changelog",
+				"title": "删除该版本",
+				"shortTitle": "删除",
+				"icon": "$(delete)"
+			},
+			{
+				"command": "simpleChangelog.changelogs.editVersion",
+				"category": "Simple Changelog",
+				"title": "编辑版本",
+				"shortTitle": "编辑版本",
+				"icon": "$(edit)"
+			},
+			{
+				"command": "simpleChangelog.changelogs.openChangelogFile",
+				"category": "Simple Changelog",
+				"title": "显示该项",
+				"shortTitle": "打开文件",
+				"icon": "$(eye)"
+			},
+			{
+				"command": "simpleChangelog.changelogs.addItem",
+				"category": "Simple Changelog",
+				"title": "添加一条日志",
+				"icon": "$(add)"
+			},
+			{
+				"command": "simpleChangelog.changelogs.deleteItem",
+				"category": "Simple Changelog",
+				"title": "删除该项"
+			},
+			{
+				"command": "simpleChangelog.changelogs.editItem",
+				"category": "Simple Changelog",
+				"title": "编辑",
+				"icon": "$(edit)"
+			}
+		],
+		"menus": {
+			"view/title": [
+				{
+					"command": "simpleChangelog.changelogs.refresh",
+					"when": "view == changelog-explorer && simpleChangelog.initialized",
+					"group": "navigation"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "simpleChangelog.changelogs.openChangelogFile",
+					"when": "view == changelog-explorer && viewItem == changelog-folder",
+					"group": "inline@1"
+				},
+				{
+					"command": "simpleChangelog.changelogs.addVersion",
+					"when": "view == changelog-explorer && viewItem == changelog-folder",
+					"group": "inline@2"
+				},
+				{
+					"command": "simpleChangelog.changelogs.editVersion",
+					"when": "viewItem == changelog-version",
+					"group": "inline"
+				},
+				{
+					"command": "simpleChangelog.changelogs.deleteVersion",
+					"when": "viewItem == changelog-version"
+				},
+				{
+					"command": "simpleChangelog.changelogs.addItem",
+					"when": "viewItem == changelog-type || viewItem == changelog-version",
+					"group": "inline"
+				},
+				{
+					"command": "simpleChangelog.changelogs.deleteItem",
+					"when": "view == changelog-explorer && viewItem == changelog-item"
+				},
+				{
+					"command": "simpleChangelog.changelogs.editItem",
+					"when": "view == changelog-explorer && viewItem == changelog-item",
+					"group": "inline"
+				}
+			]
+		}
+	},
+	"scripts": {
+		"vscode:prepublish": "yarn run package",
+		"compile": "webpack",
+		"watch": "webpack --watch",
+		"package": "webpack --mode production --devtool hidden-source-map",
+		"compile-tests": "tsc -p . --outDir out",
+		"watch-tests": "tsc -p . -w --outDir out",
+		"pretest": "yarn run compile-tests && yarn run compile && yarn run lint",
+		"lint": "eslint src --ext ts",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/glob": "^8.0.0",
+		"@types/mocha": "^10.0.1",
+		"@types/node": "16.x",
+		"@types/uuid": "^9.0.0",
+		"@types/vscode": "^1.74.0",
+		"@typescript-eslint/eslint-plugin": "^5.45.0",
+		"@typescript-eslint/parser": "^5.45.0",
+		"@vscode/test-electron": "^2.2.0",
+		"eslint": "^8.28.0",
+		"glob": "^8.0.3",
+		"mocha": "^10.1.0",
+		"ts-loader": "^9.4.2",
+		"typescript": "^4.9.3",
+		"webpack": "^5.75.0",
+		"webpack-cli": "^5.0.1"
+	},
+	"dependencies": {
+		"moment": "^2.29.4",
+		"uuid": "^9.0.0"
+	},
+	"__metadata": {
+		"id": "0150544f-5d82-4e3e-9478-222c5de1cc85",
+		"publisherId": "d3d209cd-0420-4c0b-bb94-ebd78d727176",
+		"publisherDisplayName": "Tobias Wälde",
+		"targetPlatform": "undefined",
+		"isApplicationScoped": false,
+		"isPreReleaseVersion": false,
+		"hasPreReleaseVersion": false,
+		"installedTimestamp": 1726302005610,
+		"pinned": false,
+		"preRelease": false,
+		"source": "gallery"
+	}
+}
