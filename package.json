@@ -12,7 +12,7 @@
 		"theme": "light"
 	},
 	"repository": {
-		"url": "https://github.com/nibutcrazy/vscode-simple-changelog-chinese"
+		"url": "https://github.com/NiButCrazy/simple-changelog-Chinese"
 	},
 	"engines": {
 		"vscode": "^1.74.0"
