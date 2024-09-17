@@ -18,6 +18,7 @@ const edit_version_1 = require("./commands/edit-version");
 const delete_version_1 = require("./commands/delete-version");
 const config_1 = require("../../config");
 const object_1 = require("../../util/object");
+const { versions } = require("process");
 class ChangelogProvider {
     constructor(context) {
         this.filepaths = [];
@@ -25,22 +26,31 @@ class ChangelogProvider {
         this.onDidChangeTreeData = this._onDidChangeTreeData.event;
         this.refresh();
         this.registerCommands(context);
+        this.TreeItems = []; //获取已存在的树子项，测了半天才发现getChildren返回的是新生成的树对象，怪不得每次都获取不到树状视图里的项
+        this.version_items = []; //版本树项
+        this.type_items = [];  //  类型树项
+        this.folder_items = []; //  目录树项
+        this.isAllCollapse = false;  //是否全部折叠
+        this.isAllExpanded = false;  //是否全部展开
     }
     getTreeItem(element) {
         return element;
     }
     getChildren(element) {
         if (element === undefined) {
-            return this.filepaths.map((filepath) => new folder_tree_item_1.ChangelogFolderTreeItem(new changelog_1.Changelog(filepath)));
+            this.folder_items =this.filepaths.map((filepath) => new folder_tree_item_1.ChangelogFolderTreeItem(new changelog_1.Changelog(filepath)));
+            return this.folder_items
         }
         if (element instanceof folder_tree_item_1.ChangelogFolderTreeItem) {
             const { changelog } = element;
             if (changelog.versions.length === 0) {
                 const item = new vscode.TreeItem('', vscode.TreeItemCollapsibleState.None);
-                item.description = '还没有版本';
-                return [item];
+                item.description = '还未添加任何版本';
+                this.version_items =[item]
+                return this.version_items;
             }
-            return changelog.versions.map((v) => new version_tree_item_1.ChangelogVersionTreeItem(changelog, v));
+            this.version_items = changelog.versions.map((v) => new version_tree_item_1.ChangelogVersionTreeItem(changelog, v));
+            return this.version_items
         }
         if (element instanceof version_tree_item_1.ChangelogVersionTreeItem) {
             const { changelog, version } = element;
@@ -48,33 +58,46 @@ class ChangelogProvider {
             if (itemGroupingEnabled) {
                 const additions = version.items.filter((x) => x.type === 'addition');
                 const changes = version.items.filter((x) => x.type === 'change');
-                
                 const fixes = version.items.filter((x) => x.type === 'fix');
                 const removals = version.items.filter((x) => x.type === 'removal');
-                const securityChanges = version.items.filter((x) => x.type === 'securityChange');
+                const docChanges = version.items.filter((x) => x.type === 'docChange');
                 const deprecations = version.items.filter((x) => x.type === 'deprecation');
-                return [
+                this.type_items = [
                     new type_tree_item_1.ChangelogTypeTreeItem(changelog, version, 'addition', additions),
                     new type_tree_item_1.ChangelogTypeTreeItem(changelog, version, 'change', changes),
-                    
                     new type_tree_item_1.ChangelogTypeTreeItem(changelog, version, 'fix', fixes),
                     new type_tree_item_1.ChangelogTypeTreeItem(changelog, version, 'removal', removals),
-                    new type_tree_item_1.ChangelogTypeTreeItem(changelog, version, 'securityChange', securityChanges),
+                    new type_tree_item_1.ChangelogTypeTreeItem(changelog, version, 'docChange', docChanges),
                     new type_tree_item_1.ChangelogTypeTreeItem(changelog, version, 'deprecation', deprecations),
                 ];
+                return this.type_items
             }
             else {
                 version.items.sort((a, b) => a.type.localeCompare(b.type));
-                return version.items.map((item) => new item_tree_item_1.ChangelogItemTreeItem(changelog, version, item.type, item));
+                this.type_items =version.items.map((item) => new item_tree_item_1.ChangelogItemTreeItem(changelog, version, item.type, item));
+                return this.type_items
             }
         }
         if (element instanceof type_tree_item_1.ChangelogTypeTreeItem) {
             const { changelog, version, type } = element;
-            return element.items.map((item) => new item_tree_item_1.ChangelogItemTreeItem(changelog, version, type, item));
+            this.TreeItems = element.items.map((item) => new item_tree_item_1.ChangelogItemTreeItem(changelog, version, type, item));
+            return this.TreeItems
         }
     }
+    //打开设置
+    open_setting(self){
+        vscode.commands.executeCommand('workbench.action.openSettings', '@ext:nibutcrazy.vscode-simple-changelog-chinese ');
+    }
+    //全部折叠
+    collapse_all(self) {
+
+    }
+    //全部展开
+    expand_all(self) {
+
+    }
     registerCommands(context) {
-        context.subscriptions.push(vscode.commands.registerCommand('simpleChangelog.changelogs.openChangelogFile', open_changelog_file_1.openChangelogFile), vscode.commands.registerCommand('simpleChangelog.changelogs.addVersion', add_version_1.addVersion), vscode.commands.registerCommand('simpleChangelog.changelogs.editVersion', edit_version_1.editVersion), vscode.commands.registerCommand('simpleChangelog.changelogs.deleteVersion', delete_version_1.deleteVersion), vscode.commands.registerCommand('simpleChangelog.changelogs.addItem', add_item_1.addItem), vscode.commands.registerCommand('simpleChangelog.changelogs.editItem', edit_item_1.editItem), vscode.commands.registerCommand('simpleChangelog.changelogs.deleteItem', delete_item_1.deleteItem));
+        context.subscriptions.push(vscode.commands.registerCommand('simpleChangelog.changelogs.openChangelogFile', open_changelog_file_1.openChangelogFile), vscode.commands.registerCommand('simpleChangelog.changelogs.addVersion', add_version_1.addVersion), vscode.commands.registerCommand('simpleChangelog.changelogs.editVersion', edit_version_1.editVersion), vscode.commands.registerCommand('simpleChangelog.changelogs.deleteVersion', delete_version_1.deleteVersion), vscode.commands.registerCommand('simpleChangelog.changelogs.addItem', add_item_1.addItem), vscode.commands.registerCommand('simpleChangelog.changelogs.editItem', edit_item_1.editItem), vscode.commands.registerCommand('simpleChangelog.changelogs.deleteItem', delete_item_1.deleteItem),vscode.commands.registerCommand('simpleChangelog.setting.open', this.open_setting));
     }
     refresh() {
         const workspaces = (0, fs_1.getWorkspacePaths)();

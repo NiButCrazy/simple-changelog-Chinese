@@ -13,6 +13,7 @@ class ChangelogVersionTreeItem extends vscode.TreeItem {
         const dateFormat = (0, config_1.getConfig)('dateFormat') ?? 'YYYY-MM-DD';
         this.description = moment(version.date, 'YYYY-MM-DD').format(dateFormat);
     }
+
 }
 exports.ChangelogVersionTreeItem = ChangelogVersionTreeItem;
 //# sourceMappingURL=version-tree-item.js.map

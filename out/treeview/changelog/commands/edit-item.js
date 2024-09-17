@@ -6,7 +6,7 @@ async function editItem(element) {
     const { changelog } = element;
     // ask for new item text
     const res = await vscode.window.showInputBox({
-        title: '输入编辑内容:',
+        title: '输入编辑内容',
         value: element.label?.toString(),
     });
     if (!res) {

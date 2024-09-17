@@ -54,14 +54,14 @@ class Changelog {
         return changelog;
     }
     toString() {
-        const attributionPosition = (0, config_1.getConfig)('attribution.placement') ?? 'top';
+        const attributionPosition = (0, config_1.getConfig)('attribution.placement') ?? '顶部';
         const attribution = this.getAttribution();
         let x = '# 更新日志\n\n';
-        if (attributionPosition === 'top' && attribution) {
+        if (attributionPosition === '顶部' && attribution) {
             x += `${attribution}\n\n`;
         }
         x += this.versions.map((v) => Changelog.stringifyVersion(v)).join('\n\n\n');
-        if (attributionPosition === 'bottom' && attribution) {
+        if (attributionPosition === '尾部' && attribution) {
             x += `\n\n${attribution}`;
         }
         return x.trim();
@@ -106,10 +106,10 @@ class Changelog {
         const items = [
             this.stringifyItems(version, 'addition'),
             this.stringifyItems(version, 'change'),
-            this.stringifyItems(version, 'deprecation'),
             this.stringifyItems(version, 'fix'),
             this.stringifyItems(version, 'removal'),
-            this.stringifyItems(version, 'securityChange'),
+            this.stringifyItems(version, 'docChange'),
+            this.stringifyItems(version, 'deprecation'),
         ].filter((x) => !!x);
         res += items.join('\n\n');
         return res.trim();
@@ -124,14 +124,14 @@ class Changelog {
         return res.trim();
     }
     getAttribution() {
-        const type = (0, config_1.getConfig)('attribution.visibility') ?? 'visible';
+        const type = (0, config_1.getConfig)('attribution.visibility') ?? '显示';
         const text = `日志使用 [Simple Changelog 汉化版](https://github.com/NiButCrazy/simple-changelog-Chinese) 生成`;
         switch (type) {
-            case 'visible':
+            case '显示':
                 return `*${text}*`;
-            case 'hidden':
+            case '注释化':
                 return `<!-- ${text} -->`;
-            case 'none':
+            case '不显示':
                 return undefined;
         }
     }

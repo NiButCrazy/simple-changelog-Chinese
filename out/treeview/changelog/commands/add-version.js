@@ -10,7 +10,7 @@ async function addVersion(element) {
     do {
         // ask for new version string
         const res = await vscode.window.showInputBox({
-            title: '输入新版本:',
+            title: '输入新版本',
             value: label,
         });
         if (!res) {

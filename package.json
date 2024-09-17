@@ -1,9 +1,9 @@
 {
 	"name": "vscode-simple-changelog-chinese",
 	"publisher": "NiButCrazy",
-	"displayName": "Simple Changelog 汉化版(自用测试)",
-	"description": "汉化以及优化界面",
-	"version": "1.2.1",
+	"displayName": "Simple Changelog 汉化版 ( 自用测试 ) ",
+	"description": "汉化以、优化界面、修复BUG、添新增一键添加日志并Git提交的功能",
+	"version": "1.3.0",
 	"license": "MIT",
 	"pricing": "Free",
 	"icon": "assets/icon/icon-x512.png",
@@ -34,124 +34,144 @@
 		"configuration": {
 			"title": "Simple Changelog 配置",
 			"properties": {
+				"simpleChangelog.git.enable":{
+					"type": "boolean",
+					"default": false,
+					"description": "是否启用 Git 提交日志功能 ( 添加文档型日志时使用 )"
+				},
+				"simpleChangelog.empty.input.message":{
+					"type": "boolean",
+					"default": true,
+					"description": "日志内容为空时提交是否显示对话框 ( 添加文档型日志时使用 )"
+				},
+				"simpleChangelog.delete.item.message":{
+					"type": "boolean",
+					"default": true,
+					"description": "删除一项日志时是否显示对话框"
+				},
+				"simpleChangelog.delete.version.message":{
+					"type": "boolean",
+					"default": true,
+					"description": "删除一个版本时是否显示对话框"
+				},
 				"simpleChangelog.icons.color.enabled": {
 					"type": "boolean",
 					"default": "true",
-					"description": "Enable/disable color on icons in changelog."
+					"description": "是否启用日志中的图标颜色"
 				},
 				"simpleChangelog.icons.addition.icon": {
 					"type": "string",
 					"default": "add",
-					"markdownDescription": "The icon for the `Additions` section."
+					"markdownDescription": "'添加' 的图标"
 				},
 				"simpleChangelog.icons.addition.color": {
 					"type": "string",
 					"default": "charts.blue",
-					"markdownDescription": "The color of the `Additions` icon."
+					"markdownDescription": "'添加' 的图标颜色"
 				},
 				"simpleChangelog.icons.change.icon": {
 					"type": "string",
 					"default": "edit",
-					"markdownDescription": "The icon for the `Changes` section."
+					"markdownDescription": "'更改' 的图标"
 				},
 				"simpleChangelog.icons.change.color": {
 					"type": "string",
 					"default": "charts.yellow",
-					"markdownDescription": "The color of the `Changes` icon."
+					"markdownDescription": "'添加' 的图标颜色"
 				},
 				"simpleChangelog.icons.deprecation.icon": {
 					"type": "string",
 					"default": "thumbsdown",
-					"markdownDescription": "The icon for the `Deprecations` section."
+					"markdownDescription": "'不推荐' 的图标"
 				},
 				"simpleChangelog.icons.deprecation.color": {
 					"type": "string",
 					"default": "charts.purple",
-					"markdownDescription": "The color of the `Deprecations` icon."
+					"markdownDescription": "'不推荐' 的图标颜色"
 				},
 				"simpleChangelog.icons.fix.icon": {
 					"type": "string",
 					"default": "debug",
-					"markdownDescription": "The icon for the `Fixes` section."
+					"markdownDescription": "'修复' 的图标"
 				},
 				"simpleChangelog.icons.fix.color": {
 					"type": "string",
 					"default": "charts.green",
-					"markdownDescription": "The color of the `Fixes` icon."
+					"markdownDescription": "'修复' 的图标颜色"
 				},
 				"simpleChangelog.icons.removal.icon": {
 					"type": "string",
 					"default": "circle-slash",
-					"markdownDescription": "The icon for the `Removals` section."
+					"markdownDescription": "'移除' 的图标"
 				},
 				"simpleChangelog.icons.removal.color": {
 					"type": "string",
 					"default": "charts.red",
-					"markdownDescription": "The color of the `Removals` icon."
+					"markdownDescription": "'移除' 的图标颜色"
 				},
-				"simpleChangelog.icons.securityChange.icon": {
+				"simpleChangelog.icons.docChange.icon": {
 					"type": "string",
 					"default": "book",
-					"markdownDescription": "The icon for the `Security Changes` section."
+					"markdownDescription": "'文档' 的图标"
 				},
-				"simpleChangelog.icons.securityChange.color": {
+				"simpleChangelog.icons.docChange.color": {
 					"type": "string",
 					"default": "charts.orange",
-					"markdownDescription": "The color of the `Security Changes` icon."
+					"markdownDescription": "'文档' 的图标颜色"
 				},
 				"simpleChangelog.icons.item.icon": {
 					"type": "string",
 					"default": "circle-filled",
-					"description": "The icon for the changelog items."
+					"description": "更新日志项的图标"
 				},
 				"simpleChangelog.icons.item.enabled": {
 					"type": "boolean",
 					"default": false,
-					"description": "Enable/disable type icons on items."
+					"description": "是否在日志项上启用类型图标"
 				},
 				"simpleChangelog.groupsOpenByDefault": {
 					"type": "boolean",
 					"default": true,
-					"markdownDescription": "If set to `true`, groups are open by default when opening version."
+                    "markdownDescription": "如果设置为 `true`，在打开版本时，默认展开组"
 				},
 				"simpleChangelog.searchIncludeRegex": {
 					"type": "string",
 					"default": "/changelog.md/i",
-					"description": "The regex used to search workspace folders for changelog files."
+                    "description": "用于在工作区文件夹中搜索更改日志文件的正则表达式"
 				},
 				"simpleChangelog.searchExcludeRegex": {
 					"type": "string",
 					"default": "/node_modules/",
-					"description": "The regex used exlude folders in search for changelog files."
+                    "description": "用于排除搜索更改日志文件时的文件夹的正则表达式"				
 				},
 				"simpleChangelog.dateFormat": {
 					"type": "string",
 					"default": "YYYY-MM-DD",
-					"markdownDescription": "The date format. See [Moment.js Documentation](https://momentjs.com/docs/#/displaying/format/) for more information."
+                    "markdownDescription": "日期格式。有关更多信息，请参阅 [Moment.js 文档](https://momentjs.com/docs/#/displaying/format/)"				
 				},
 				"simpleChangelog.itemGrouping": {
 					"type": "boolean",
 					"default": true,
-					"description": "Enable/Disable item grouping under changelog version."
+                    "description": "在更改日志版本下启用/禁用项目分组。"				
 				},
 				"simpleChangelog.attribution.visibility": {
 					"type": "string",
-					"default": "visible",
+					"default": "显示",
 					"enum": [
-						"visible",
-						"hidden",
-						"none"
+						"显示",
+						"注释化",
+						"不显示"
 					],
-					"description": "Choose how the attribution to the extension should be displayed."
+                    "description": "选择如何在 CHANGELOG.md 中显示对扩展程序的致谢"				
 				},
 				"simpleChangelog.attribution.placement": {
 					"type": "string",
-					"default": "top",
+					"default": "顶部",
 					"enum": [
-						"top",
-						"bottom"
+						"顶部",
+						"尾部"
 					],
-					"description": "Choose where the attribution to the extension should be displayed."
+                    "description": "选择在 CHANGELOG.md 哪个位置显示对扩展程序的致谢"				
 				}
 			}
 		},
@@ -181,6 +201,12 @@
 			]
 		},
 		"commands": [
+			{
+				"command": "simpleChangelog.setting.open",
+				"category": "Simple Changelog",
+				"title": "打开设置",
+				"icon":"$(settings)"
+			},
 			{
 				"command": "simpleChangelog.initialize",
 				"category": "Simple Changelog",
@@ -217,7 +243,7 @@
 			{
 				"command": "simpleChangelog.changelogs.openChangelogFile",
 				"category": "Simple Changelog",
-				"title": "打开该更新日志",
+				"title": "打开日志文件",
 				"shortTitle": "打开文件",
 				"icon": "$(eye)"
 			},
@@ -230,7 +256,7 @@
 			{
 				"command": "simpleChangelog.changelogs.deleteItem",
 				"category": "Simple Changelog",
-				"title": "删除该项"
+				"title": "删除"
 			},
 			{
 				"command": "simpleChangelog.changelogs.editItem",
@@ -244,8 +270,13 @@
 				{
 					"command": "simpleChangelog.changelogs.refresh",
 					"when": "view == changelog-explorer && simpleChangelog.initialized",
-					"group": "navigation"
-				}
+					"group": "navigation@1"
+				},
+				{
+					"command": "simpleChangelog.setting.open",
+					"when": "view == changelog-explorer && simpleChangelog.initialized",
+					"group": "navigation@3"
+				}	
 			],
 			"view/item/context": [
 				{
@@ -274,6 +305,10 @@
 				},
 				{
 					"command": "simpleChangelog.changelogs.deleteItem",
+					"when": "view == changelog-explorer && viewItem == changelog-item"
+				},
+				{
+					"command": "simpleChangelog.changelogs.editItem",
 					"when": "view == changelog-explorer && viewItem == changelog-item"
 				},
 				{
@@ -324,9 +359,9 @@
 		"isApplicationScoped": false,
 		"isPreReleaseVersion": false,
 		"hasPreReleaseVersion": false,
-		"installedTimestamp": 1726302005610,
-		"pinned": false,
+		"installedTimestamp": 1726318070095,
+		"pinned": true,
 		"preRelease": false,
-		"source": "gallery"
+		"source": "vsix"
 	}
 }

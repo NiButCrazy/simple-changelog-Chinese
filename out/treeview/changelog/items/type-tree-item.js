@@ -16,7 +16,7 @@ class ChangelogTypeTreeItem extends vscode.TreeItem {
         if (items.length > 0 && (0, config_1.getConfig)('groupsOpenByDefault')) {
             this.collapsibleState = vscode.TreeItemCollapsibleState.Expanded;
         }
-        this.tooltip = new vscode.MarkdownString(items.map((x) => `- ${x}`).join('\n'));
+        this.tooltip = new vscode.MarkdownString(items.map((x) => `- ${x.text}`).join('\n'));
         this.description = `(${items.length})`;
         this.iconPath = (0, util_1.getIconFromItemType)(type);
     }

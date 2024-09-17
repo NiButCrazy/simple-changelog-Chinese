@@ -35,8 +35,8 @@ exports.itemTypes = {
         icon: 'circle-slash',
         color: 'charts.red',
     },
-    securityChange: {
-        singular: 'Security Change',
+    docChange: {
+        singular: 'Doc Change',
         plural: '文档',
         header: '文档变化',
         icon: 'book',
@@ -45,7 +45,7 @@ exports.itemTypes = {
     deprecation: {
         singular: 'Deprecation',
         plural: '不推荐',
-        header: '不推荐使用',
+        header: '不推荐使用功能',
         icon: 'thumbsdown',
         color: 'charts.purple',
     }
