@@ -19,6 +19,7 @@ const delete_version_1 = require("./commands/delete-version");
 const config_1 = require("../../config");
 const object_1 = require("../../util/object");
 const copy_version_logs_1 = require("./commands/copy-version-logs");
+const clear_version_logs_1 = require("./commands/clear-version-logs");
 const { versions } = require("process");
 class ChangelogProvider {
     constructor(context) {
@@ -87,6 +88,7 @@ class ChangelogProvider {
     }
     //打开设置
     open_setting(self){
+        vscode.window.showInformationMessage("注意：扩展的设置存储在 “工作区” ");
         vscode.commands.executeCommand('workbench.action.openSettings', '@ext:nibutcrazy.vscode-simple-changelog-chinese ');
     }
     //全部折叠
@@ -109,7 +111,8 @@ class ChangelogProvider {
             vscode.commands.registerCommand('simpleChangelog.setting.open', this.open_setting),
             vscode.commands.registerCommand('simpleChangelog.changelogs.addItems', add_item_1.addItem),
             vscode.commands.registerCommand('simpleChangelog.versionLogs.copy', copy_version_logs_1.versionCopyLogs),
-            vscode.commands.registerCommand('simpleChangelog.itemLog.copy', copy_version_logs_1.versionCopyLogs)
+            vscode.commands.registerCommand('simpleChangelog.itemLog.copy', copy_version_logs_1.versionCopyLogs),
+            vscode.commands.registerCommand('simpleChangelog.versionLogs.clear', clear_version_logs_1.versionClearLogs)
         );
     }
     refresh() {
