@@ -7,7 +7,7 @@
 ![GitHub Release](https://img.shields.io/github/v/release/NiButCrazy/simple-changelog-Chinese?display_name=release)
 ![GitHub last commit](https://img.shields.io/github/last-commit/NiButCrazy/simple-changelog-Chinese?label=%E6%9B%B4%E6%96%B0%E6%97%B6%E9%97%B4)
 
-魔改自 VScode扩展 **[Simple Changelog](https://github.com/tobiaswaelde/vscode-simple-changelog)**，完全汉化，修复了许多小BUG，并添加了一系列十分实用的功能，更加适合**中国宝宝体质**，同时实现了 `CHANGELOG.md` 日志的半自动化
+魔改自 VScode扩展 **[Simple Changelog](https://github.com/tobiaswaelde/vscode-simple-changelog)**，完全汉化，修复了许多小BUG，并添加了一系列十分实用的功能，更加适合**中国宝宝体质**，同时实现了 `CHANGELOG.md` 日志的半自动化，这是[更新日志](https://github.com/NiButCrazy/simple-changelog-Chinese/blob/main/CHANGELOG.md)
 
 ## 功能
 ### 1. 完全汉化
