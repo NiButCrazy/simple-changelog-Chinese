@@ -6,9 +6,16 @@ const changelog_1 = require("../../../util/changelog");
 const object_1 = require("../../../util/object");
 const version_tree_item_1 = require("../items/version-tree-item");
 const config_1 = require("../../../config");
+
+const statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 0); //  初始化状态栏
+let timer = null; //定时器初始化
+
 // 添加了一键添加多更新消息的功能，并支持直接提交Git
 async function addItem(element) {
-    const { changelog, version } = element;
+    statusBarItem.hide()
+    statusBarItem.text = '$(sync~spin) Git 提交中';
+    clearTimeout(timer)
+    let { changelog, version } = element;
     let type = element.type;
     // if element is version, ask user which type the item should be
     if (element instanceof version_tree_item_1.ChangelogVersionTreeItem) {
@@ -102,7 +109,7 @@ async function addItem(element) {
                         color: var(--vscode-button-foreground);
                         margin-left: 20px;
                         user-select: none;
-                        transition: all 0.2s;
+                        transition: all 0.2s,background-color 0s;
                     }
                     #add-btn:hover{
                         background-color: var(--vscode-button-hoverBackground);
@@ -119,6 +126,13 @@ async function addItem(element) {
                         position: relative;
                         outline: none;
                         appearance: none;
+                    }
+                    #gitHead-checkbox{
+                        color: var(--vscode-button-foreground);
+                        outline: none;
+                        appearance: none;
+                        margin: 5px;
+                        margin-left: 7px;
                     }
                     #submit-checkbox:hover{
                         cursor: pointer;
@@ -150,9 +164,10 @@ async function addItem(element) {
                 
             </head>
             <body>
-                <textarea id="changelog-input"}' placeholder="文本框可以输入任何消息，其中想要转换为日志内容的格式为：\n( 添加 | 更改 | 修复 | 移除 | 文档 | 不推荐 ) + ( 中文符号 )：+ ( 日志消息 [ 支持Markdown ] )\n例如 ↓↓↓\n添加：Simple Changelog 汉化版 添加了Git提交功能"></textarea><br>
+                <textarea id="changelog-input"}' placeholder="文本框可以输入任何消息，其中想要转换为日志内容的格式为：\n\n( 添加 | 更改 | 修复 | 移除 | 文档 | 不推荐 ) + ( 中文符号 )：+ ( 日志消息 )\n例如 → 添加：Simple Changelog 汉化版 添加了Git提交功能\n\nGit 提交：添加日志的同时执行 Git提交 命令\n消息头修饰：第一行内容作为消息头，在行尾添加本次提交的各类型日志数量"></textarea><br>
                 <a onclick="addText()" id="add-btn" class="btn">添加</a>
                 <input type = "checkbox"  id = "submit-checkbox" onclick="gitEnabled(this)"><label for="submit-checkbox" style = "user-select: none;" >Git 提交</label>
+                <input type = "checkbox"  id = "gitHead-checkbox" onclick="headEnabled(this)"><label for="gitHead-checkbox" style = "user-select: none;">消息头修饰</label>
                 <a onclick="cancel()" id="cancel-btn" class="btn">取消</a>
             </body>
             <script>
@@ -161,8 +176,9 @@ async function addItem(element) {
                     const submit_checkbox = document.getElementById('submit-checkbox')
                     const add_btn = document.getElementById('add-btn')
                     const cancel_btn = document.getElementById('cancel-btn')
+                    const gitHead_checkbox = document.getElementById('gitHead-checkbox')
                     submit_checkbox.checked = ${config_1.getConfig('git.enable')}
-                    
+                    gitHead_checkbox.checked = ${config_1.getConfig('head.enable')}
                     changelog_input.onfocus = function(e){
                         changelog_input.classList.remove('empty')
                     }
@@ -185,8 +201,10 @@ async function addItem(element) {
                     function gitEnabled(self){
                         vscode.postMessage({type:'gitEnabled',enabled:self.checked});
                     }
+                    function headEnabled(self){
+                        vscode.postMessage({type:'headEnabled',enabled:self.checked});
+                    }
                     window.addEventListener('message',msg => {
-                        console.log(msg)
                         switch (msg.data.type) {
                             case "error":
                                 add_btn.innerHTML = "添加"
@@ -209,8 +227,21 @@ async function addItem(element) {
             (message) => {
                 switch (message.type) {
                     case "add":
-                        vscode.window.setStatusBarMessage(''); //清除其余消息
-                        const text = message.text;
+                        // changelog =vscode.my_provider.version_items.changelog;
+                        // 专门修复在编辑多行日志时，外部修改日志导致日志覆盖的BUG
+                        const label = version.label;
+                        for (let index = 0; index < vscode.my_provider.version_items.length; index++) {
+                            const element = vscode.my_provider.version_items[index];
+                            if(element.label === label){
+                                changelog = element.changelog;
+                                version = element.version;
+                                break
+                            }
+                            
+                        }
+                        vscode.window.setStatusBarMessage(''); //  清除其余消息
+                        let text = message.text; //原始文件内容
+                        let types_num = {"添加：":0,"更改：":0,"修复：":0,"移除：":0,"文档：":0,"不推荐：":0} // 记录更改数量
                         const logMessages = text.split('\n').map(x => x.trim()).filter(x => x !== '');
                         let success_num = 0; //记录成功写入日志的数量
                         logMessages.forEach(log => {
@@ -226,6 +257,7 @@ async function addItem(element) {
                                     vscode.window.showWarningMessage('[ 该项内容已存在 ] '+ log );
                                     return
                                 }
+                                types_num[log_type]++
                                 success_num++
                                 changelog.versions.find((x) => x.label === version.label)?.items.push({ "type":log_type_match, "text":log_content });
                             }
@@ -236,6 +268,7 @@ async function addItem(element) {
                         }
                         
                         if (config_1.getConfig('git.enable')) {
+                            statusBarItem.show()
                             const workspaceFolder = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
                             const terminal = vscode.window.createTerminal({ name: 'Git 提交' });
                             const listener = vscode.window.onDidEndTerminalShellExecution( (e) => {
@@ -249,11 +282,14 @@ async function addItem(element) {
                                         return
                                     }
                                     if (e.execution.commandLine.value == "git add ."){
-                                        
+                                        statusBarItem.text = "$(check) Git 提交成功"
                                         terminal.dispose();
                                         listener.dispose();
                                         vscode.window.showInformationMessage("Git 提交成功，并添加了 "+success_num+" 条日志");
                                         panel.dispose();
+                                        timer = setTimeout(()=>{
+                                            statusBarItem.hide()
+                                        },3000)
                                     }
                                 }
                                 
@@ -263,6 +299,22 @@ async function addItem(element) {
                                     terminal.dispose();
                                     close_listener.dispose()
                                 })
+                                if (config_1.getConfig('head.enable')){
+                                    let message_head = '（ ' //消息头
+                                    for(let log_type in types_num){
+                                        if (types_num[log_type] > 0){
+                                            message_head += log_type + types_num[log_type] + "处、"
+                                        }
+                                    }
+                                    message_head = message_head.slice(0,-1) + " ）"
+                                    let new_text = text.split('\n')
+                                    if (message_head == "（ ）") {
+                                        new_text[0]+= "（ 未含任何日志更新 ）"
+                                    }else{
+                                        new_text[0]+= message_head
+                                    }
+                                    text = new_text.join('\n')
+                                }
                                 terminal.sendText(`cd "${workspaceFolder}"`);
                                 terminal.sendText(`git add .`);
                                 terminal.sendText(`git commit -m "${text}"`);
@@ -294,6 +346,9 @@ async function addItem(element) {
                                 }    
                             });
                         }
+                        break
+                    case "headEnabled":
+                        config_1.setConfig('head.enable', message.enabled);
                         break
                     default:
                         break;

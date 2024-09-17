@@ -16,6 +16,7 @@ function activate(context) {
         treeDataProvider: provider,
         showCollapseAll: true,
     });
+    vscode.my_provider = provider
     vscode.commands.registerCommand('simpleChangelog.changelogs.refresh', () => provider.refresh());
     
     (0, commands_1.registerCommands)(context);

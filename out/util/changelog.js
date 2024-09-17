@@ -10,7 +10,7 @@ exports.itemTypes = {
     addition: {
         singular: 'Addition',
         plural: '添加',
-        header: '新增加内容',
+        header: '新增内容',
         icon: 'add',
         color: 'charts.green',
     },

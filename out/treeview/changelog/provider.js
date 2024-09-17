@@ -18,6 +18,7 @@ const edit_version_1 = require("./commands/edit-version");
 const delete_version_1 = require("./commands/delete-version");
 const config_1 = require("../../config");
 const object_1 = require("../../util/object");
+const copy_version_logs_1 = require("./commands/copy-version-logs");
 const { versions } = require("process");
 class ChangelogProvider {
     constructor(context) {
@@ -97,7 +98,19 @@ class ChangelogProvider {
 
     }
     registerCommands(context) {
-        context.subscriptions.push(vscode.commands.registerCommand('simpleChangelog.changelogs.openChangelogFile', open_changelog_file_1.openChangelogFile), vscode.commands.registerCommand('simpleChangelog.changelogs.addVersion', add_version_1.addVersion), vscode.commands.registerCommand('simpleChangelog.changelogs.editVersion', edit_version_1.editVersion), vscode.commands.registerCommand('simpleChangelog.changelogs.deleteVersion', delete_version_1.deleteVersion), vscode.commands.registerCommand('simpleChangelog.changelogs.addItem', add_item_1.addItem), vscode.commands.registerCommand('simpleChangelog.changelogs.editItem', edit_item_1.editItem), vscode.commands.registerCommand('simpleChangelog.changelogs.deleteItem', delete_item_1.deleteItem),vscode.commands.registerCommand('simpleChangelog.setting.open', this.open_setting));
+        context.subscriptions.push(
+            vscode.commands.registerCommand('simpleChangelog.changelogs.openChangelogFile', open_changelog_file_1.openChangelogFile), 
+            vscode.commands.registerCommand('simpleChangelog.changelogs.addVersion', add_version_1.addVersion),
+            vscode.commands.registerCommand('simpleChangelog.changelogs.editVersion', edit_version_1.editVersion), 
+            vscode.commands.registerCommand('simpleChangelog.changelogs.deleteVersion', delete_version_1.deleteVersion), 
+            vscode.commands.registerCommand('simpleChangelog.changelogs.addItem', add_item_1.addItem), 
+            vscode.commands.registerCommand('simpleChangelog.changelogs.editItem', edit_item_1.editItem), 
+            vscode.commands.registerCommand('simpleChangelog.changelogs.deleteItem', delete_item_1.deleteItem),
+            vscode.commands.registerCommand('simpleChangelog.setting.open', this.open_setting),
+            vscode.commands.registerCommand('simpleChangelog.changelogs.addItems', add_item_1.addItem),
+            vscode.commands.registerCommand('simpleChangelog.versionLogs.copy', copy_version_logs_1.versionCopyLogs),
+            vscode.commands.registerCommand('simpleChangelog.itemLog.copy', copy_version_logs_1.versionCopyLogs)
+        );
     }
     refresh() {
         const workspaces = (0, fs_1.getWorkspacePaths)();

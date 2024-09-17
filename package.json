@@ -2,8 +2,8 @@
 	"name": "vscode-simple-changelog-chinese",
 	"publisher": "NiButCrazy",
 	"displayName": "Simple Changelog 汉化版 ( 自用测试 ) ",
-	"description": "汉化以、优化界面、修复BUG、添新增一键添加日志并Git提交的功能",
-	"version": "1.3.0",
+	"description": "汉化以、优化界面、修复BUG、添新增一键添加日志并Git提交等实用功能",
+	"version": "1.3.1",
 	"license": "MIT",
 	"pricing": "Free",
 	"icon": "assets/icon/icon-x512.png",
@@ -34,22 +34,27 @@
 		"configuration": {
 			"title": "Simple Changelog 配置",
 			"properties": {
-				"simpleChangelog.git.enable":{
+				"simpleChangelog.git.enable": {
 					"type": "boolean",
 					"default": false,
-					"description": "是否启用 Git 提交日志功能 ( 添加文档型日志时使用 )"
+					"description": "是否启用 Git 提交日志功能 ( 添加多项日志时使用 )"
 				},
-				"simpleChangelog.empty.input.message":{
+				"simpleChangelog.head.enable": {
+					"type": "boolean",
+					"default": false,
+					"description": "是否启用消息头修饰功能 ( 添加多项日志时使用 )"
+				},
+				"simpleChangelog.empty.input.message": {
 					"type": "boolean",
 					"default": true,
-					"description": "日志内容为空时提交是否显示对话框 ( 添加文档型日志时使用 )"
+					"description": "日志内容为空时提交是否显示对话框 ( 添加多项日志时使用 )"
 				},
-				"simpleChangelog.delete.item.message":{
+				"simpleChangelog.delete.item.message": {
 					"type": "boolean",
 					"default": true,
 					"description": "删除一项日志时是否显示对话框"
 				},
-				"simpleChangelog.delete.version.message":{
+				"simpleChangelog.delete.version.message": {
 					"type": "boolean",
 					"default": true,
 					"description": "删除一个版本时是否显示对话框"
@@ -132,27 +137,27 @@
 				"simpleChangelog.groupsOpenByDefault": {
 					"type": "boolean",
 					"default": true,
-                    "markdownDescription": "如果设置为 `true`，在打开版本时，默认展开组"
+					"markdownDescription": "如果设置为 `true`，在打开版本时，默认展开组"
 				},
 				"simpleChangelog.searchIncludeRegex": {
 					"type": "string",
 					"default": "/changelog.md/i",
-                    "description": "用于在工作区文件夹中搜索更改日志文件的正则表达式"
+					"description": "用于在工作区文件夹中搜索更改日志文件的正则表达式"
 				},
 				"simpleChangelog.searchExcludeRegex": {
 					"type": "string",
 					"default": "/node_modules/",
-                    "description": "用于排除搜索更改日志文件时的文件夹的正则表达式"				
+					"description": "用于排除搜索更改日志文件时的文件夹的正则表达式"
 				},
 				"simpleChangelog.dateFormat": {
 					"type": "string",
 					"default": "YYYY-MM-DD",
-                    "markdownDescription": "日期格式。有关更多信息，请参阅 [Moment.js 文档](https://momentjs.com/docs/#/displaying/format/)"				
+					"markdownDescription": "日期格式。有关更多信息，请参阅 [Moment.js 文档](https://momentjs.com/docs/#/displaying/format/)"
 				},
 				"simpleChangelog.itemGrouping": {
 					"type": "boolean",
 					"default": true,
-                    "description": "在更改日志版本下启用/禁用项目分组。"				
+					"description": "在更改日志版本下启用/禁用项目分组。"
 				},
 				"simpleChangelog.attribution.visibility": {
 					"type": "string",
@@ -162,7 +167,7 @@
 						"注释化",
 						"不显示"
 					],
-                    "description": "选择如何在 CHANGELOG.md 中显示对扩展程序的致谢"				
+					"description": "选择如何在 CHANGELOG.md 中显示对扩展程序的致谢"
 				},
 				"simpleChangelog.attribution.placement": {
 					"type": "string",
@@ -171,7 +176,7 @@
 						"顶部",
 						"尾部"
 					],
-                    "description": "选择在 CHANGELOG.md 哪个位置显示对扩展程序的致谢"				
+					"description": "选择在 CHANGELOG.md 哪个位置显示对扩展程序的致谢"
 				}
 			}
 		},
@@ -202,10 +207,21 @@
 		},
 		"commands": [
 			{
+				"command": "simpleChangelog.versionLogs.copy",
+				"category": "Simple Changelog",
+				"title": "复制日志",
+				"icon": "$(settings)"
+			},
+			{
+				"command": "simpleChangelog.itemLog.copy",
+				"category": "Simple Changelog",
+				"title": "复制"
+			},
+			{
 				"command": "simpleChangelog.setting.open",
 				"category": "Simple Changelog",
 				"title": "打开设置",
-				"icon":"$(settings)"
+				"icon": "$(settings)"
 			},
 			{
 				"command": "simpleChangelog.initialize",
@@ -229,7 +245,7 @@
 			{
 				"command": "simpleChangelog.changelogs.deleteVersion",
 				"category": "Simple Changelog",
-				"title": "删除该版本",
+				"title": "删除版本",
 				"shortTitle": "删除",
 				"icon": "$(delete)"
 			},
@@ -254,6 +270,12 @@
 				"icon": "$(add)"
 			},
 			{
+				"command": "simpleChangelog.changelogs.addItems",
+				"category": "Simple Changelog",
+				"title": "添加多条日志",
+				"icon": "$(output-view-icon)"
+			},
+			{
 				"command": "simpleChangelog.changelogs.deleteItem",
 				"category": "Simple Changelog",
 				"title": "删除"
@@ -276,7 +298,7 @@
 					"command": "simpleChangelog.setting.open",
 					"when": "view == changelog-explorer && simpleChangelog.initialized",
 					"group": "navigation@3"
-				}	
+				}
 			],
 			"view/item/context": [
 				{
@@ -300,8 +322,17 @@
 				},
 				{
 					"command": "simpleChangelog.changelogs.addItem",
-					"when": "viewItem == changelog-type || viewItem == changelog-version",
+					"when": "viewItem == changelog-type",
 					"group": "inline"
+				},
+				{
+					"command": "simpleChangelog.changelogs.addItems",
+					"when": "viewItem == changelog-version",
+					"group": "inline"
+				},
+				{
+					"command": "simpleChangelog.itemLog.copy",
+					"when": "view == changelog-explorer && viewItem == changelog-item"
 				},
 				{
 					"command": "simpleChangelog.changelogs.deleteItem",
@@ -311,6 +342,11 @@
 					"command": "simpleChangelog.changelogs.editItem",
 					"when": "view == changelog-explorer && viewItem == changelog-item"
 				},
+				{
+					"command": "simpleChangelog.versionLogs.copy",
+					"when": "view == changelog-explorer && viewItem == changelog-version"
+				},
+				
 				{
 					"command": "simpleChangelog.changelogs.editItem",
 					"when": "view == changelog-explorer && viewItem == changelog-item",
@@ -350,18 +386,5 @@
 	"dependencies": {
 		"moment": "^2.29.4",
 		"uuid": "^9.0.0"
-	},
-	"__metadata": {
-		"id": "0150544f-5d82-4e3e-9478-222c5de1cc85",
-		"publisherId": "d3d209cd-0420-4c0b-bb94-ebd78d727176",
-		"publisherDisplayName": "Tobias Wälde",
-		"targetPlatform": "undefined",
-		"isApplicationScoped": false,
-		"isPreReleaseVersion": false,
-		"hasPreReleaseVersion": false,
-		"installedTimestamp": 1726318070095,
-		"pinned": true,
-		"preRelease": false,
-		"source": "vsix"
 	}
 }
