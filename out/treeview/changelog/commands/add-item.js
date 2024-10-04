@@ -281,7 +281,7 @@ async function addItem(element) {
                                         vscode.window.showErrorMessage("Git 提交失败，请手动执行命令 "+"（ 但 "+success_num+" 条日志已成功添加 ）");
                                         return
                                     }
-                                    if (e.execution.commandLine.value == "git add ."){
+                                    if (e.execution.commandLine.value == "git add ." | e.execution.commandLine.value.slice(0,13) == "git commit -m"){
                                         statusBarItem.text = "$(check) Git 提交成功"
                                         terminal.dispose();
                                         listener.dispose();
